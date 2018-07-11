@@ -141,11 +141,20 @@ func (this *Game)processRequest(req def.MailClientData) {
 	switch req.Route {
 	case rpc.RouteHash("game.login"):
 		logger.Debug("执行登录")
+		// 登录逻辑
 		var i def.MailClientData
 		i.RequestId = req.RequestId
 		i.ClientId = req.ClientId
+		i.SourceAddress = "127.0.0.1:9003"
+		i.SourceName = "game"
 		i.Data = []byte("你好, 欢迎")
 		this.mailBox.SendTo(this.gateAddress, &rpc.Mail{Type:def.Mail_ResponseData, Object:i})
+		// 通知网关, 如果这个会话断开则通知我
+		i.RequestId = 0
+		i.ClientId = req.ClientId
+		i.Data = nil
+		this.mailBox.SendTo(this.gateAddress, &rpc.Mail{Type:def.Mail_ClientLeaveNotifyMe, Object:i})
+
 	case rpc.RouteHash("game.join"):
 		logger.Debug("执行加入")
 	}

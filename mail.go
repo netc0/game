@@ -17,6 +17,14 @@ func (this* Game) OnNewMail(mail rpc.Mail) {
 		}
 
 		this.processRequest(v)
+	} else if mail.Type == def.Mail_ClientLeaveNotification {
+		// 客户端断开
+		var v def.MailClientData
+		if err := mail.Decode(&v); err != nil {
+			logger.Debug(err)
+			return
+		}
+		logger.Debug("客户端断开:", v)
 	}
 }
 
