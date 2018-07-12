@@ -30,7 +30,6 @@ func (this* Game) OnNewMail(mail rpc.Mail) {
 
 func (this* Game)OnRoutineConnected(remote string) {
 	logger.Debug("路径连接成功:", remote)
-
 	if remote == this.gateAddress {
 		// 在网关注册我的信息
 		if err := this.mailBox.SendTo(remote, &rpc.Mail{Type:def.Mail_Reg,
